@@ -1,0 +1,113 @@
+.auth-container, .profile-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 40px 20px;
+}
+
+.auth-form, .profile-card {
+  background: var(--surface);
+  color: var(--text-main);
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--border);
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+}
+
+.auth-form h2, .profile-card h2 {
+  margin-bottom: 24px;
+  color: var(--text-main);
+  text-align: center;
+}
+
+.auth-form label {
+  margin-bottom: 8px;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.auth-form input, .auth-form select {
+  padding: 12px;
+  margin-bottom: 20px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 16px;
+  background: var(--surface);
+  color: var(--text-main);
+  transition: border-color 0.3s;
+}
+
+.auth-form input:focus, .auth-form select:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+.night-mode .auth-form input,
+.night-mode .auth-form select {
+  background: #0f172a;
+  color: var(--text-main);
+  border-color: var(--border);
+}
+
+.night-mode .auth-form select option {
+  background: #151d30;
+  color: #f8fafc;
+}
+
+.auth-form button, .logout-btn {
+  padding: 12px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.auth-form button:hover, .logout-btn:hover {
+  background-color: #0056b3;
+}
+
+.auth-form p {
+  text-align: center;
+  margin-top: 20px;
+  color: var(--text-muted);
+}
+
+.auth-form p a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.error {
+  background-color: #f8d7da;
+  color: #721c24;
+  padding: 10px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+  text-align: center;
+  font-size: 14px;
+}
+
+.night-mode .error {
+  background-color: rgba(239, 68, 68, 0.2);
+  color: #fca5a5;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.profile-details {
+  margin-bottom: 24px;
+}
+
+.profile-details p {
+  margin: 10px 0;
+  font-size: 16px;
+  color: var(--text-main);
+}
