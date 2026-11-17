@@ -38,6 +38,19 @@ Built with the **MERN Stack** (MongoDB, Express, React, Node.js) and real-time m
 
 ---
 
+## 🗄️ Database Architecture & Schema
+
+The MongoDB database design is fully documented with an interactive Mermaid ER diagram and field dictionary in [DATABASE_SCHEMA.md](DATABASE_SCHEMA.md).
+
+- **`User`** (`backend/models/User.js`): Accounts, hostel mapping, independent buyer/seller ratings
+- **`Listing`** (`backend/models/Listing.js`): Items, pricing, categories, condition, availability, soft-delete
+- **`PurchaseRequest`** (`backend/models/PurchaseRequest.js`): Multi-buyer negotiation requests & sale state
+- **`Conversation`** (`backend/models/Conversation.js`): 1-to-1 negotiation chat rooms & closure reasons
+- **`Message`** (`backend/models/Message.js`): Real-time chat messages
+- **`Review`** (`backend/models/Review.js`): Two-sided ratings with multi-criterion evaluation
+
+---
+
 ## 📦 Project Structure
 
 ```text
