@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
 import StarSelector from './StarSelector';
+import { API_URL } from '../config';
 
 const ReviewModal = ({ conversationId, isOpen, onClose, onReviewSubmitted }) => {
   const { user } = useContext(AuthContext);
@@ -26,7 +27,7 @@ const ReviewModal = ({ conversationId, isOpen, onClose, onReviewSubmitted }) => 
         setSuccessMessage(null);
         setValidationErrors({});
 
-        const res = await axios.get(`http://localhost:5000/api/reviews/status/${conversationId}`, {
+        const res = await axios.get(`${API_URL}/reviews/status/${conversationId}`, {
           headers: { Authorization: `Bearer ${user.token}` }
         });
 
@@ -100,7 +101,7 @@ const ReviewModal = ({ conversationId, isOpen, onClose, onReviewSubmitted }) => 
       setError(null);
 
       const res = await axios.post(
-        'http://localhost:5000/api/reviews',
+        `${API_URL}/reviews`,
         {
           conversationId,
           criteria: criteriaRatings,

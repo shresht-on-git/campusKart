@@ -4,6 +4,7 @@ import { AuthContext } from '../context/AuthContext';
 import { Link, useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import ReputationBadge from '../components/ReputationBadge';
+import { API_URL, getImageUrl } from '../config';
 import './Auth.css';
 
 const CATEGORIES = [
@@ -69,7 +70,7 @@ const Profile = () => {
       if (!user?._id || !user?.token) return;
       try {
         setLoadingReputation(true);
-        const res = await axios.get(`http://localhost:5000/api/reviews/user/${user._id}`, {
+        const res = await axios.get(`${API_URL}/reviews/user/${user._id}`, {
           headers: { Authorization: `Bearer ${user.token}` }
         });
         setReputationData(res.data);
@@ -88,7 +89,7 @@ const Profile = () => {
     if (!user?.token) return;
     try {
       setLoadingListings(true);
-      const res = await axios.get('http://localhost:5000/api/listings/my', {
+      const res = await axios.get(`${API_URL}/listings/my`, {
         headers: { Authorization: `Bearer ${user.token}` }
       });
       setMyListings(res.data || []);
@@ -127,7 +128,7 @@ const Profile = () => {
     try {
       setSavingProfile(true);
       const res = await axios.put(
-        'http://localhost:5000/api/auth/profile',
+        `${API_URL}/auth/profile`,
         { name: trimmed, hostel: profileHostel },
         { headers: { Authorization: `Bearer ${user?.token}` } }
       );
@@ -214,7 +215,7 @@ const Profile = () => {
         payload.append('image', editImageFile);
       }
 
-      await axios.put(`http://localhost:5000/api/listings/${editingListing._id}`, payload, {
+      await axios.put(`${API_URL}/listings/${editingListing._id}`, payload, {
         headers: {
           Authorization: `Bearer ${user?.token}`,
           'Content-Type': 'multipart/form-data'
@@ -245,7 +246,7 @@ const Profile = () => {
 
     try {
       setProcessingDelete(true);
-      await axios.delete(`http://localhost:5000/api/listings/${deletingListing._id}`, {
+      await axios.delete(`${API_URL}/listings/${deletingListing._id}`, {
         headers: { Authorization: `Bearer ${user?.token}` }
       });
 
@@ -569,7 +570,7 @@ const Profile = () => {
               <div style={{ display: 'grid', gap: '16px' }}>
                 {displayedListings.map((item) => {
                   const imageSrc = item.images?.[0]
-                    ? (item.images[0].startsWith('http') ? item.images[0] : `http://localhost:5000${item.images[0]}`)
+                    ? getImageUrl(item.images[0])
                     : 'https://placehold.co/800x600?text=No+Image';
 
                   return (
@@ -804,7 +805,7 @@ const Profile = () => {
                       {editImagePreview ? 'New Image Preview:' : 'Current Product Image:'}
                     </div>
                     <img
-                      src={editImagePreview || (editingListing.images[0].startsWith('http') ? editingListing.images[0] : `http://localhost:5000${editingListing.images[0]}`)}
+                      src={editImagePreview || getImageUrl(editingListing.images[0])}
                       alt="Preview"
                       style={{ maxHeight: '140px', maxWidth: '100%', objectFit: 'contain', borderRadius: '6px', border: '1px solid var(--border)' }}
                     />

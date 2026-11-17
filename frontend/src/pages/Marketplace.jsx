@@ -6,6 +6,7 @@ import HostelToggle from '../components/HostelToggle';
 import ReputationBadge from '../components/ReputationBadge';
 import { AuthContext } from '../context/AuthContext';
 import { useHostelMode } from '../context/HostelModeContext';
+import { API_URL, getImageUrl } from '../config';
 
 const Marketplace = () => {
   const { user } = useContext(AuthContext);
@@ -39,7 +40,7 @@ const Marketplace = () => {
       if (sortBy) params.append('sortBy', sortBy);
       if (hostelMode) params.append('hostelMode', 'true');
 
-      const res = await axios.get(`http://localhost:5000/api/listings?${params.toString()}`, {
+      const res = await axios.get(`${API_URL}/listings?${params.toString()}`, {
         headers: { Authorization: `Bearer ${user?.token}` }
       });
       setListings(res.data);
@@ -201,7 +202,7 @@ const Marketplace = () => {
                 return (
                   <Link to={`/listings/${listing._id}`} key={listing._id} className="card">
                     <img 
-                      src={listing.images?.length > 0 ? listing.images[0] : 'https://placehold.co/400x300?text=No+Image'} 
+                      src={listing.images?.length > 0 ? getImageUrl(listing.images[0]) : 'https://placehold.co/400x300?text=No+Image'} 
                       alt={listing.title} 
                       className="card-img" 
                     />

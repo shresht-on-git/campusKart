@@ -5,6 +5,7 @@ import Navbar from '../components/Navbar';
 import { AuthContext } from '../context/AuthContext';
 import ReputationBadge from '../components/ReputationBadge';
 import ReviewModal from '../components/ReviewModal';
+import { API_URL, getImageUrl } from '../config';
 
 const MyPurchases = () => {
   const { user } = useContext(AuthContext);
@@ -16,7 +17,7 @@ const MyPurchases = () => {
 
   const fetchRequests = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/purchases/my', {
+      const res = await axios.get(`${API_URL}/purchases/my`, {
         headers: { Authorization: `Bearer ${user?.token}` }
       });
       setRequests(res.data);
@@ -34,7 +35,7 @@ const MyPurchases = () => {
   const handleCancel = async (id) => {
     if (!window.confirm('Are you sure you want to cancel this request?')) return;
     try {
-      await axios.put(`http://localhost:5000/api/purchases/${id}/cancel`, {}, {
+      await axios.put(`${API_URL}/purchases/${id}/cancel`, {}, {
         headers: { Authorization: `Bearer ${user?.token}` }
       });
       setRequests(requests.map(req => req._id === id ? { ...req, status: 'cancelled' } : req));
@@ -113,7 +114,7 @@ const MyPurchases = () => {
                 <div key={req._id} className="card" style={{ display: 'flex', padding: '16px', gap: '16px', alignItems: 'center' }}>
                   {req.listing?.images?.[0] ? (
                     <img
-                      src={req.listing.images[0].startsWith('http') ? req.listing.images[0] : `http://localhost:5000${req.listing.images[0]}`}
+                      src={getImageUrl(req.listing.images[0])}
                       alt="listing"
                       style={{ width: '100px', height: '100px', objectFit: 'cover', borderRadius: '8px' }}
                       onError={(e) => { e.target.src = 'https://placehold.co/800x600?text=No+Image'; }}

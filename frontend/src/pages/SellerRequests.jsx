@@ -5,6 +5,7 @@ import Navbar from '../components/Navbar';
 import { AuthContext } from '../context/AuthContext';
 import ReputationBadge from '../components/ReputationBadge';
 import ReviewModal from '../components/ReviewModal';
+import { API_URL, getImageUrl } from '../config';
 
 const SellerRequests = () => {
   const { user } = useContext(AuthContext);
@@ -19,7 +20,7 @@ const SellerRequests = () => {
 
   const fetchRequests = async () => {
     try {
-      const res = await axios.get(`http://localhost:5000/api/purchases/seller?sortBy=${sortBy}`, {
+      const res = await axios.get(`${API_URL}/purchases/seller?sortBy=${sortBy}`, {
         headers: { Authorization: `Bearer ${user?.token}` }
       });
       setRequests(res.data);
@@ -37,7 +38,7 @@ const SellerRequests = () => {
   const handleAcceptAndChat = async (reqItem) => {
     try {
       setActionLoading(reqItem._id);
-      const res = await axios.put(`http://localhost:5000/api/purchases/${reqItem._id}/accept`, {}, {
+      const res = await axios.put(`${API_URL}/purchases/${reqItem._id}/accept`, {}, {
         headers: { Authorization: `Bearer ${user?.token}` }
       });
       
@@ -72,7 +73,7 @@ const SellerRequests = () => {
     if (!window.confirm('Are you sure you want to end negotiation with this buyer?')) return;
     try {
       setActionLoading(id);
-      const res = await axios.put(`http://localhost:5000/api/purchases/${id}/end-negotiation`, {}, {
+      const res = await axios.put(`${API_URL}/purchases/${id}/end-negotiation`, {}, {
         headers: { Authorization: `Bearer ${user?.token}` }
       });
       
@@ -93,7 +94,7 @@ const SellerRequests = () => {
     if (!window.confirm('Are you sure you want to reject this request?')) return;
     try {
       setActionLoading(id);
-      const res = await axios.put(`http://localhost:5000/api/purchases/${id}/reject`, {}, {
+      const res = await axios.put(`${API_URL}/purchases/${id}/reject`, {}, {
         headers: { Authorization: `Bearer ${user?.token}` }
       });
       
@@ -118,7 +119,7 @@ const SellerRequests = () => {
     try {
       setActionLoading(id);
       await axios.put(
-        `http://localhost:5000/api/purchases/${id}/seller-decision`,
+        `${API_URL}/purchases/${id}/seller-decision`,
         { decision },
         { headers: { Authorization: `Bearer ${user?.token}` } }
       );
@@ -164,7 +165,7 @@ const SellerRequests = () => {
                 <div key={req._id} className="card" style={{ display: 'flex', padding: '16px', gap: '16px', alignItems: 'center' }}>
                   {req.listing?.images?.[0] ? (
                     <img
-                      src={req.listing.images[0].startsWith('http') ? req.listing.images[0] : `http://localhost:5000${req.listing.images[0]}`}
+                      src={getImageUrl(req.listing.images[0])}
                       alt="listing"
                       style={{ width: '100px', height: '100px', objectFit: 'cover', borderRadius: '8px' }}
                       onError={(e) => { e.target.src = 'https://placehold.co/800x600?text=No+Image'; }}

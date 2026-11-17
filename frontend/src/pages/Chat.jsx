@@ -5,6 +5,7 @@ import { io } from 'socket.io-client';
 import Navbar from '../components/Navbar';
 import ReviewModal from '../components/ReviewModal';
 import { AuthContext } from '../context/AuthContext';
+import { API_BASE_URL, API_URL, getImageUrl } from '../config';
 
 const Chat = () => {
   const { conversationId } = useParams();
@@ -41,7 +42,7 @@ const Chat = () => {
   const checkReviewEligibility = useCallback(async (autoOpen = false) => {
     if (!conversationId || !user?.token) return;
     try {
-      const res = await axios.get(`http://localhost:5000/api/reviews/status/${conversationId}`, {
+      const res = await axios.get(`${API_URL}/reviews/status/${conversationId}`, {
         headers: { Authorization: `Bearer ${user.token}` }
       });
       setReviewStatus(res.data);
@@ -58,10 +59,10 @@ const Chat = () => {
     try {
       setLoading(true);
       const [convRes, msgRes] = await Promise.all([
-        axios.get(`http://localhost:5000/api/chats/${conversationId}`, {
+        axios.get(`${API_URL}/chats/${conversationId}`, {
           headers: { Authorization: `Bearer ${user?.token}` }
         }),
-        axios.get(`http://localhost:5000/api/chats/${conversationId}/messages`, {
+        axios.get(`${API_URL}/chats/${conversationId}/messages`, {
           headers: { Authorization: `Bearer ${user?.token}` }
         })
       ]);
@@ -100,7 +101,7 @@ const Chat = () => {
   useEffect(() => {
     if (!user?.token || !conversationId) return;
 
-    const socket = io('http://localhost:5000', {
+    const socket = io(API_BASE_URL, {
       auth: { token: user.token }
     });
 
@@ -224,7 +225,7 @@ const Chat = () => {
     } else {
       try {
         const res = await axios.post(
-          `http://localhost:5000/api/chats/${conversationId}/messages`,
+          `${API_URL}/chats/${conversationId}/messages`,
           { message: trimmed },
           { headers: { Authorization: `Bearer ${user?.token}` } }
         );
@@ -246,7 +247,7 @@ const Chat = () => {
     try {
       setActionLoading(true);
       await axios.put(
-        `http://localhost:5000/api/purchases/${purchaseReqId}/confirm-sale`,
+        `${API_URL}/purchases/${purchaseReqId}/confirm-sale`,
         { sellerMessage: sellerMessage.trim() || undefined },
         { headers: { Authorization: `Bearer ${user?.token}` } }
       );
@@ -280,7 +281,7 @@ const Chat = () => {
     try {
       setActionLoading(true);
       await axios.put(
-        `http://localhost:5000/api/purchases/${purchaseReqId}/end-negotiation`,
+        `${API_URL}/purchases/${purchaseReqId}/end-negotiation`,
         {},
         { headers: { Authorization: `Bearer ${user?.token}` } }
       );
@@ -310,7 +311,7 @@ const Chat = () => {
     try {
       setActionLoading(true);
       await axios.put(
-        `http://localhost:5000/api/purchases/${purchaseReqId}/buyer-end-negotiation`,
+        `${API_URL}/purchases/${purchaseReqId}/buyer-end-negotiation`,
         {},
         { headers: { Authorization: `Bearer ${user?.token}` } }
       );
@@ -347,7 +348,7 @@ const Chat = () => {
     try {
       setActionLoading(true);
       await axios.put(
-        `http://localhost:5000/api/purchases/${purchaseReqId}/seller-decision`,
+        `${API_URL}/purchases/${purchaseReqId}/seller-decision`,
         { decision: 'no_sale' },
         { headers: { Authorization: `Bearer ${user?.token}` } }
       );
@@ -491,7 +492,7 @@ const Chat = () => {
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px', background: 'var(--surface-alt, #f8fafc)', padding: '6px 12px', borderRadius: '8px', border: '1px solid var(--border)' }}>
                   {conversation.listing.images?.[0] && (
                     <img
-                      src={conversation.listing.images[0].startsWith('http') ? conversation.listing.images[0] : `http://localhost:5000${conversation.listing.images[0]}`}
+                      src={getImageUrl(conversation.listing.images[0])}
                       alt="item"
                       style={{ width: '36px', height: '36px', objectFit: 'cover', borderRadius: '4px' }}
                       onError={(e) => { e.target.src = 'https://placehold.co/800x600?text=No+Image'; }}

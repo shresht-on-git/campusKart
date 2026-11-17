@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import { AuthContext } from '../context/AuthContext';
+import { API_URL, getImageUrl } from '../config';
 
 const EditListing = () => {
   const { id } = useParams();
@@ -36,7 +37,7 @@ const EditListing = () => {
   useEffect(() => {
     const fetchListing = async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/api/listings/${id}`, {
+        const res = await axios.get(`${API_URL}/listings/${id}`, {
           headers: { Authorization: `Bearer ${user?.token}` }
         });
         
@@ -66,7 +67,7 @@ const EditListing = () => {
         });
 
         if (listing.images?.length > 0) {
-          setCurrentImage(listing.images[0]);
+          setCurrentImage(getImageUrl(listing.images[0]));
         }
       } catch (err) {
         setError('Failed to load listing.');
@@ -109,7 +110,7 @@ const EditListing = () => {
         payload.append('image', imageFile);
       }
 
-      await axios.put(`http://localhost:5000/api/listings/${id}`, payload, {
+      await axios.put(`${API_URL}/listings/${id}`, payload, {
         headers: { 
           Authorization: `Bearer ${user?.token}`,
           'Content-Type': 'multipart/form-data'

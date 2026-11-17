@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import { AuthContext } from '../context/AuthContext';
+import { API_URL } from '../config';
 
 const CreateListing = () => {
   const { user } = useContext(AuthContext);
@@ -59,7 +60,7 @@ const CreateListing = () => {
       payload.append('condition', formData.condition);
       payload.append('image', imageFile);
 
-      const res = await axios.post('http://localhost:5000/api/listings', payload, {
+      const res = await axios.post(`${API_URL}/listings`, payload, {
         headers: { 
           Authorization: `Bearer ${user?.token}`,
           'Content-Type': 'multipart/form-data'

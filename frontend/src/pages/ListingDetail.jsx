@@ -4,6 +4,7 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import ReputationBadge from '../components/ReputationBadge';
 import { AuthContext } from '../context/AuthContext';
+import { API_URL, getImageUrl } from '../config';
 
 const ListingDetail = () => {
   const { id } = useParams();
@@ -19,13 +20,13 @@ const ListingDetail = () => {
   useEffect(() => {
     const fetchListing = async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/api/listings/${id}`, {
+        const res = await axios.get(`${API_URL}/listings/${id}`, {
           headers: { Authorization: `Bearer ${user?.token}` }
         });
         setListing(res.data);
         
         if (user && user._id !== res.data.seller?._id) {
-          const statusRes = await axios.get(`http://localhost:5000/api/purchases/check/${id}`, {
+          const statusRes = await axios.get(`${API_URL}/purchases/check/${id}`, {
             headers: { Authorization: `Bearer ${user?.token}` }
           });
           if (statusRes.data.exists) {
@@ -51,7 +52,7 @@ const ListingDetail = () => {
   const handleDelete = async () => {
     if (window.confirm('Are you sure you want to delete this listing?')) {
       try {
-        await axios.delete(`http://localhost:5000/api/listings/${id}`, {
+        await axios.delete(`${API_URL}/listings/${id}`, {
           headers: { Authorization: `Bearer ${user?.token}` }
         });
         navigate('/marketplace');
@@ -63,7 +64,7 @@ const ListingDetail = () => {
 
   const handlePurchaseRequest = async () => {
     try {
-      await axios.post(`http://localhost:5000/api/purchases/${id}`, {}, {
+      await axios.post(`${API_URL}/purchases/${id}`, {}, {
         headers: { Authorization: `Bearer ${user?.token}` }
       });
       setPurchaseStatus('pending');
@@ -103,7 +104,7 @@ const ListingDetail = () => {
           <div className="detail-grid">
             <div>
               <img 
-                src={listing.images?.length > 0 ? listing.images[0] : 'https://placehold.co/800x600?text=No+Image'} 
+                src={listing.images?.length > 0 ? getImageUrl(listing.images[0]) : 'https://placehold.co/800x600?text=No+Image'} 
                 alt={listing.title} 
                 className="detail-image"
               />
